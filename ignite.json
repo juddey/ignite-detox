@@ -1,5 +1,5 @@
 {
   
-    "generators": [ "thing" ]
+    "generators": [ "e2e" ]
   
 }

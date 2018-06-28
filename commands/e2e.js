@@ -1,5 +1,5 @@
 // @cliDescription  Example Detox command
-// Generates a "thing" (rename this to whatever -- component, model, anything).
+// Generates an end-to-end test in the 'e2e' directory.
 
 module.exports = async function (context) {
   // Learn more about context: https://infinitered.github.io/gluegun/#/context-api.md
@@ -8,19 +8,17 @@ module.exports = async function (context) {
 
   // validation
   if (isBlank(parameters.first)) {
-    print.info(`ignite generate thing <name>\n`)
+    print.info(`ignite generate e2e <name>\n`)
     print.info('A name is required.')
     return
   }
 
   const name = pascalCase(parameters.first)
   const props = { name }
-
-  // Copies the `thing.js.ejs` in your plugin's templates folder
-  // into App/Things/${name}.js.
+  
   const jobs = [{
-    template: 'thing.js.ejs',
-    target: `App/Things/${name}.js`
+    template: 'e2e.js.ejs',
+    target: `e2e/${name}.spec.js`
   }]
 
   // make the templates and pass in props with the third argument here
