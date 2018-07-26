@@ -15,5 +15,5 @@ You'll also get `ignite g e2e <testname>` for free. This will create a scaffolde
 
 Enjoy!
 
-##License
+## License
 MIT.
