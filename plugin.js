@@ -5,7 +5,7 @@ const NPM_MODULE_NAME = 'detox'
 const NPM_MODULE_VERSION = '8.0.0'
 const jetpack = require('fs-jetpack')
 const PACKAGE_JSON = process.env.NODE_ENV === 'test'
-  ? { 'devDependencies': { jest: '^2.0.0'} } 
+  ? { 'devDependencies': { jest: '^2.0.0'} }
   : jetpack.read('./package.json', 'json')
 const which = require('which')
 const os = require('os')
@@ -19,10 +19,10 @@ const add = async function (context) {
   // Learn more about context: https://infinitered.github.io/gluegun/#/context-api.md
   const { ignite, filesystem, print, system } = context
   const spinner = process.env.NODE_ENV === 'test' ? print.spin : print.spin()
-  
+
   // Check for OSX only.
   if (os.platform != 'darwin') {
-    throw new Error("Sorry! Only OS/X supported right now.")
+    throw new Error('Sorry! Only OS/X supported right now.')
   }
 
   // Check OSX setup
@@ -31,35 +31,31 @@ const add = async function (context) {
     if (!ret) { throw new Error("You'll need to install brew to continue.") }
 
     ret = await which.sync('applesimutils', { nothrow: true })
-    if (ret) { print.info('Apple Sim Utils Installed. Onward!') }
-    else {
-      spinner.start("Installing Apple Sim Utils")
+    if (ret) { print.info('Apple Sim Utils Installed. Onward!') } else {
+      spinner.start('Installing Apple Sim Utils')
       ret = await system.run('brew tap wix/brew && brew install applesimutils')
       if (ret.stderr) {
-        spinner.fail("Installing Apple Sim Utils")
+        spinner.fail('Installing Apple Sim Utils')
         spinner.stop()
         return
-      }
-      else { spinner.succeed("Installed Apple Sim Utils") }
+      } else { spinner.succeed('Installed Apple Sim Utils') }
     }
-
   } // End IOS specific requirements
 
-  spinner.start("Installing Detox Cli globally")
+  spinner.start('Installing Detox Cli globally')
   const detoxCli = await (system.run(`npm install -g detox-cli`))
   if (R.prop('stderr', detoxCli)) {
-    spinner.fail("Failed to Install Detox Cli")
+    spinner.fail('Failed to Install Detox Cli')
     spinner.stop()
     return
-  }
-  else { spinner.succeed("Installed Detox Cli") }
+  } else { spinner.succeed('Installed Detox Cli') }
 
   // Check Jest is installed
-  if(R.keys(PACKAGE_JSON.devDependencies).includes('jest')) {
-    spinner.succeed("Found Jest Config in package.json") } else
-    { throw new Error("Oops! Can't find jest installed") }
+  if (R.keys(PACKAGE_JSON.devDependencies).includes('jest')) {
+    spinner.succeed('Found Jest Config in package.json') 
+} else { throw new Error("Oops! Can't find jest installed") }
 
-  spinner.start("Adding Detox key to package.json")
+  spinner.start('Adding Detox key to package.json')
   // Patch package.json with detox key
   let newJSON = R.merge(PACKAGE_JSON, { detox: helpers.detoxConfig(PACKAGE_JSON.name) })
   let scripts = R.prop('scripts', PACKAGE_JSON)
@@ -68,18 +64,18 @@ const add = async function (context) {
   let newJest = { jest: R.merge(jestKey, helpers.jestAdditions) }
   fileJSON = R.mergeAll([newJSON, newScripts, newJest])
   await filesystem.write('package.json', fileJSON, { jsonIndent: 2 })
-  spinner.succeed("Added Detox key to package.json") 
+  spinner.succeed('Added Detox key to package.json')
 
   await ignite.addModule(NPM_MODULE_NAME, { version: NPM_MODULE_VERSION })
 
-  spinner.start("Setting up for jest")
+  spinner.start('Setting up for jest')
   await system.run('detox init -r jest')
-  spinner.succeed("Set up for Jest")
- 
-  spinner.succeed("Ready to build your app for testing!")
+  spinner.succeed('Set up for Jest')
+
+  spinner.succeed('Ready to build your app for testing!')
   print.info("Run 'detox build' to kick off a build prior to testing")
-  print.info("or try ignite g e2e <testname> to scaffold a new test.") 
- 
+  print.info('or try ignite g e2e <testname> to scaffold a new test.')
+
 }
 
 /**
@@ -106,4 +102,3 @@ const remove = async function (context) {
 
 // Required in all Ignite CLI plugins
 module.exports = { add, remove }
-
