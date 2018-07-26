@@ -5,7 +5,7 @@ const NPM_MODULE_NAME = 'detox'
 const NPM_MODULE_VERSION = '8.0.0'
 const jetpack = require('fs-jetpack')
 const PACKAGE_JSON = process.env.NODE_ENV === 'test'
-  ? { 'devDependencies': { jest: '^2.0.0'} }
+  ? { 'devDependencies': { jest: '^2.0.0' } }
   : jetpack.read('./package.json', 'json')
 const which = require('which')
 const os = require('os')
@@ -21,13 +21,13 @@ const add = async function (context) {
   const spinner = process.env.NODE_ENV === 'test' ? print.spin : print.spin()
 
   // Check for OSX only.
-  if (os.platform != 'darwin') {
+  if (os.platform !== 'darwin') {
     throw new Error('Sorry! Only OS/X supported right now.')
   }
 
   // Check OSX setup
-  if (os.platform = 'darwin') {
-    ret = await which.sync('brew', { nothrow: true })
+  if (os.platform === 'darwin') {
+    let ret = await which.sync('brew', { nothrow: true })
     if (!ret) { throw new Error("You'll need to install brew to continue.") }
 
     ret = await which.sync('applesimutils', { nothrow: true })
@@ -52,8 +52,8 @@ const add = async function (context) {
 
   // Check Jest is installed
   if (R.keys(PACKAGE_JSON.devDependencies).includes('jest')) {
-    spinner.succeed('Found Jest Config in package.json') 
-} else { throw new Error("Oops! Can't find jest installed") }
+    spinner.succeed('Found Jest Config in package.json')
+  } else { throw new Error("Oops! Can't find jest installed") }
 
   spinner.start('Adding Detox key to package.json')
   // Patch package.json with detox key
@@ -62,7 +62,7 @@ const add = async function (context) {
   let newScripts = { scripts: R.merge(scripts, helpers.scripts) }
   let jestKey = R.prop('jest', newJSON)
   let newJest = { jest: R.merge(jestKey, helpers.jestAdditions) }
-  fileJSON = R.mergeAll([newJSON, newScripts, newJest])
+  let fileJSON = R.mergeAll([newJSON, newScripts, newJest])
   await filesystem.write('package.json', fileJSON, { jsonIndent: 2 })
   spinner.succeed('Added Detox key to package.json')
 
@@ -75,7 +75,6 @@ const add = async function (context) {
   spinner.succeed('Ready to build your app for testing!')
   print.info("Run 'detox build' to kick off a build prior to testing")
   print.info('or try ignite g e2e <testname> to scaffold a new test.')
-
 }
 
 /**
@@ -83,7 +82,7 @@ const add = async function (context) {
  */
 const remove = async function (context) {
   // Learn more about context: https://infinitered.github.io/gluegun/#/context-api.md
-  const { ignite, filesystem } = context
+  const { ignite } = context
 
   // remove the npm module and unlink it
   await ignite.removeModule(NPM_MODULE_NAME, { unlink: true })
