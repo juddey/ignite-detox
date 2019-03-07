@@ -3,7 +3,7 @@
 Give your awesome [ignite](https://github.com/infinitered/ignite) a full [detox](https://github.com/wix/detox) - using tests, of course. No real applications were harmed in the making of this plugin.
 
 ```js
-ignite add ignite-detox
+ignite add detox
 ```
 
 You'll also get `ignite g e2e <testname>` for free. This will create a scaffolded test in the `e2e` directory.
